@@ -76,7 +76,7 @@ const OTPVerificationForm = () => {
         </form>
       </Form>
       <Typography className="text-base font-medium text-center mt-6 mx-auto">
-        Didn't received code?{" "}
+        {`Didn't received code?`}{" "}
         <Button
           variant={"link"}
           onClick={() => console.log("code send successfully")}

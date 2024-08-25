@@ -18,8 +18,9 @@ const Page = () => {
         </Typography>
         <Typography
           className="text-base font-medium text-muted-foreground mt-6"
-        >
+        >{`
           Don't worry it occurs. please enter the email address linked with your account.
+        `}
         </Typography>
         <ForgotPasswordForm />
       </AuthLayout>

@@ -129,7 +129,7 @@ const LoginForm = () => {
         </form>
       </Form>
       <Typography className="text-base font-medium text-center mt-6 mx-auto">
-        Don't have an account?{" "}
+        {`Don't have an account?`}{" "}
         <Link href={"/register"} className="text-primary">
           Register Now
         </Link>
