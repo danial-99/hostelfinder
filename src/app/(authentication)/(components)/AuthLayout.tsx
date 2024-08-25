@@ -1,8 +1,6 @@
-import { CheckCircle } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import Image from "next/image";
-import Typography from "@/components/ui/Custom/Typography";
 import { FC } from "react";
+import Image from "next/image";
+import Typography from "@/components/Custom/Typography";
 
 interface IProps {
   title: string;
