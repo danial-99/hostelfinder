@@ -28,18 +28,19 @@ enum BookingStatus {
 }
 
 model User {
-  id        String            @id @default(uuid())
-  userId    String            @unique
-  name      String?
-  username  String?           @unique
-  email     String            @unique
-  password  String?
-  phone     String?
-  role      UserRole          @default(USER)
-  hostels   Hostel[]
-  bookings  BookingRequests[]
-  feedbacks Feedback[]
-  ratings   Rating[]
+  id              String            @id @default(uuid())
+  userId          String            @unique
+  name            String
+  username        String?           @unique
+  email           String            @unique
+  password        String?
+  phone           String?
+  termsConditions Boolean           @default(true)
+  role            UserRole          @default(USER)
+  hostels         Hostel[]
+  bookings        BookingRequests[]
+  feedbacks       Feedback[]
+  ratings         Rating[]
 }
 
 model Hostel {
@@ -144,14 +145,14 @@ model Rating {
 }
 
 model Pricing {
-  id            String          @id @default(uuid())
-  hostelId      String          @unique
-  hostel        Hostel          @relation(fields: [hostelId], references: [id])
-  monthlyPrice  Float
-  yearlyPrice   Float
-  currency      String
-  createdAt     DateTime        @default(now())
-  updatedAt     DateTime        @updatedAt
+  id           String   @id @default(uuid())
+  hostelId     String   @unique
+  hostel       Hostel   @relation(fields: [hostelId], references: [id])
+  monthlyPrice Float
+  yearlyPrice  Float
+  currency     String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 }
 
 model HostelFeatured {
