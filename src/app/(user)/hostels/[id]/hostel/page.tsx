@@ -67,13 +67,13 @@ export default function HostelDetails() {
                   <span>7th Road Rawalpindi</span>
                 </div>
                 <p className='mb-4'>
-                  A girls hostel is a residential accommodation facility
+                 {` A girls hostel is a residential accommodation facility
                   designed specifically for female students or working
                   professionals. It provides a safe, comfortable, and supportive
                   living environment for women who are pursuing their education
                   or careers away from home. Girls' hostels typically offer
                   shared or private rooms, common areas for socializing and
-                  studying, and various amenities to ensure a comfortable stay.
+                  studying, and various amenities to ensure a comfortable stay.`}
                 </p>
                 <div className='flex items-center mb-4'>
                   <div className='flex'>
@@ -185,7 +185,7 @@ export default function HostelDetails() {
         <section className='my-12'>
           <h2 className='text-2xl font-bold mb-6'>Hostel Details</h2>
           <p>
-            A hostel is a budget-oriented shared-room ("dormitory")
+           {` A hostel is a budget-oriented shared-room ("dormitory")
             accommodation that accepts individual travelers (typically
             backpackers) or groups for short-term stays, and that provides
             common areas and communal facilities. To be considered a hostel, the
@@ -196,7 +196,7 @@ export default function HostelDetails() {
             might include a common area, kitchen facilities, lockers and washing
             machines. Hostels are generally cheaper for both the operator and
             occupants; many hostels employ their long-term residents as desk
-            clerks or housekeeping staff in exchange for free accommodation.
+            clerks or housekeeping staff in exchange for free accommodation.`}
           </p>
         </section>
       </div>
