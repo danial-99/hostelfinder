@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { Poppins } from "next/font/google";
 
-import { cn } from "../../lib/utils";
+import { cn } from "@/app/lib/utils"
+import { Toaster } from "@/components/ui/toaster";
 
 const fontSans = Poppins({
   subsets: ["latin", "latin-ext"],
@@ -29,6 +30,7 @@ export default function RootLayout({
         )}
       >
         {children}
+        <Toaster />
       </body>
     </html>
   );
