@@ -19,61 +19,91 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
-const formSchema = z.object({
-  role: z.string().min(1, "Role is required"),
-  username: z.string().min(1, "Name is required"),
-  email: z
-    .string()
-    .email()
-    .min(5, {
-      message: "email must be 5 characters",
-    }),
-  password: z.string().refine(
-    (value) => {
-      return (
-        value.length >= 8 &&
-        /[A-Z]/.test(value) &&
-        /[!@#$%^&*()\-_+=<>?]/.test(value) &&
-        /[0-9]/.test(value)
-      );
-    },
-    {
-      message: "Password must contain at least 8 characters long",
-    }
-  ),
-  confirmPassword: z.string().refine(
-    (value) => {
-      return (
-        value.length >= 8 &&
-        /[A-Z]/.test(value) &&
-        /[!@#$%^&*()\-_+=<>?]/.test(value) &&
-        /[0-9]/.test(value)
-      );
-    },
-    {
-      message: "Password must contain at least 8 characters long",
-    }
-  ),
-  remeber: z.boolean(),
-});
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { signUp } from "../../../../../actions/authen/signup";
+import { useToast } from "@/hooks/use-toast";
+import { SignupFormSchema } from "@/app/lib/definitions";
 
 const SignupForm = () => {
-  const form = useForm<any>({
-    resolver: zodResolver(formSchema),
+  const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
+  const { toast } = useToast()
+
+  const form = useForm<z.infer<typeof SignupFormSchema>>({
+    resolver: zodResolver(SignupFormSchema),
     defaultValues: {
-      role: "",
+      role: "USER",
       username: "",
       email: "",
       password: "",
       confirmPassword: "",
-      remeber: false,
+      "terms&Conditions": false,
     },
   });
 
   const { reset, handleSubmit } = form;
 
-  const onSubmit = (data: any) => {
-    console.log(data, "form data");
+  const onSubmit = async (data: z.infer<typeof SignupFormSchema>) => {
+    setIsLoading(true);
+    try {
+      const formData = new FormData();
+      Object.entries(data).forEach(([key, value]) => {
+        formData.append(key, value.toString());
+      });
+
+      const result = await signUp(formData);
+      console.log(result, 'import { cn } from "@/app/lib/utils"')
+
+      if (result.error) {
+        // Handle different error scenarios based on status code
+        switch (result.status) {
+          case 400:
+            toast({
+              title: "Invalid Input",
+              description: "Please check your information and try again.",
+              variant: 'destructive',
+            });
+            break;
+          case 409:
+            toast({
+              title: "User Already Exists",
+              description: "An account with this email already exists.",
+              variant: 'destructive',
+            });
+            break;
+          case 500:
+            toast({
+              title: "Server Error",
+              description: "An unexpected error occurred. Please try again later.",
+              variant: 'destructive',
+            });
+            break;
+          default:
+            toast({
+              title: "Signup Failed",
+              description: result.error || "An error occurred during signup.",
+              variant: 'destructive',
+            });
+        }
+      } else {
+        // Signup successful
+        toast({
+          title: "Signup Successful",
+          description: "Your account has been created successfully.",
+          variant: 'default',
+        });
+        router.push("/login");
+      }
+    } catch (error) {
+      toast({
+        title: "Signup Failed",
+        description: "An unexpected error occurred. Please try again.",
+        variant: 'destructive',
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -186,7 +216,12 @@ const SignupForm = () => {
             render={({ field }) => (
               <FormItem className='mb-4'>
                 <div className='flex justify-start items-center gap-x-2'>
-                  <Checkbox value={field.value} onSelect={field.onChange} />
+                  <FormControl>
+                    <Checkbox
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                    />
+                  </FormControl>
                   <Typography className='text-muted-foreground text-xs'>
                     I accept{" "}
                     <Link
@@ -197,17 +232,15 @@ const SignupForm = () => {
                     </Link>
                   </Typography>
                 </div>
-                <FormControl>
-                  <FormMessage />
-                </FormControl>
+                <FormMessage />
               </FormItem>
             )}
           />
           <Button
-            disabled={false}
+            disabled={isLoading}
             className='flex justify-center items-center gap-1 w-full text-white bg-secondary hover:bg-secondary/90'
           >
-            {false && <Loader2 className='animate-spin text-white h-4 w-4' />}
+            {isLoading && <Loader2 className='animate-spin text-white h-4 w-4' />}
             <Typography variant='span'>Register</Typography>
           </Button>
         </form>

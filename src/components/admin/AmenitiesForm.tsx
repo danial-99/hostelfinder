@@ -19,7 +19,7 @@ import {
   Droplet,
   Tent,
 } from "lucide-react";
-import { cn } from "../../../lib/utils";
+import { cn } from "@/app/lib/utils"
 import { Separator } from "../ui/separator";
 
 interface Amenity {

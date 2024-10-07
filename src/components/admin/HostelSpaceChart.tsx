@@ -15,7 +15,7 @@ export default function HostelSpaceChart() {
         <CardTitle>Hostel Space</CardTitle>
       </CardHeader>
       <CardContent>
-        <div className="h-[200px]">
+        <div className="h-[260px]">
           <ResponsiveContainer width="100%" height="100%">
             <PieChart>
               <Pie
