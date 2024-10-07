@@ -1,12 +1,11 @@
 // schema.prisma
+generator client {
+  provider = "prisma-client-js"
+}
 
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
-}
-
-generator client {
-  provider = "prisma-client-js"
 }
 
 enum UserRole {
@@ -29,14 +28,15 @@ enum BookingStatus {
 
 model User {
   id              String            @id @default(uuid())
-  userId          String            @unique
   name            String
   username        String?           @unique
   email           String            @unique
-  password        String?
+  password        String
   phone           String?
   termsConditions Boolean           @default(true)
   role            UserRole          @default(USER)
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
   hostels         Hostel[]
   bookings        BookingRequests[]
   feedbacks       Feedback[]
@@ -44,23 +44,24 @@ model User {
 }
 
 model Hostel {
-  id             String             @id @default(uuid())
-  ownerId        String?
-  ownerName      User?              @relation(fields: [ownerId], references: [id])
-  name           String
-  location       String
-  type           HostelType
-  description    String
-  image          String
-  createdAt      DateTime           @default(now())
-  updatedAt      DateTime           @updatedAt
-  rooms          HostelRooms[]
-  facilities     HostelFacilities[]
-  bookings       BookingRequests[]
-  feedbacks      Feedback[]
-  ratings        Rating[]
-  Pricing        Pricing[]
-  HostelFeatured HostelFeatured[]
+  id              String             @id @default(uuid())
+  ownerId         String?
+  ownerName       User?              @relation(fields: [ownerId], references: [id])
+  name            String
+  location        String
+  type            HostelType
+  description     String
+  image           String
+  termsConditions String
+  createdAt       DateTime           @default(now())
+  updatedAt       DateTime           @updatedAt
+  rooms           HostelRooms[]
+  facilities      HostelFacilities[]
+  bookings        BookingRequests[]
+  feedbacks       Feedback[]
+  ratings         Rating[]
+  Pricing         Pricing[]
+  HostelFeatured  HostelFeatured[]
 }
 
 model HostelRooms {
@@ -99,8 +100,7 @@ model Facility {
 
 model BookingRequests {
   id        String           @id @default(uuid())
-  userId    String
-  user      User?            @relation(fields: [userId], references: [id])
+  user      User?            @relation(fields: [id], references: [id])
   hostelId  String
   hostel    Hostel?          @relation(fields: [hostelId], references: [id])
   roomId    String?
@@ -124,8 +124,7 @@ model BookingPayments {
 
 model Feedback {
   id        String   @id @default(uuid())
-  userId    String
-  user      User?    @relation(fields: [userId], references: [id])
+  user      User?    @relation(fields: [id], references: [id])
   hostelId  String
   hostel    Hostel?  @relation(fields: [hostelId], references: [id])
   message   String
@@ -135,8 +134,7 @@ model Feedback {
 
 model Rating {
   id        String   @id @default(uuid())
-  userId    String
-  user      User?    @relation(fields: [userId], references: [id])
+  user      User?    @relation(fields: [id], references: [id])
   hostelId  String
   hostel    Hostel?  @relation(fields: [hostelId], references: [id])
   rating    Int
