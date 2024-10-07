@@ -6,15 +6,15 @@ import bcrypt from "bcrypt";
 import { NextResponse } from "next/server";
 
 enum UserRole {
-  SUPER_ADMIN,
-  ADMIN,
-  USER
+  SUPER_ADMIN = 'SUPER_ADMIN',
+  ADMIN= 'ADMIN',
+  USER='USER'
 }
 
 export async function signUp(formData: FormData) {
   try {
     const name = formData.get('username') as string;
-    const role = formData.get('role') as string;
+    const role = formData.get('role') as UserRole;
     const email = formData.get('email') as string;
     const password = formData.get('password') as string;
     const termsConditions = formData.get('terms&Conditions') as string;
