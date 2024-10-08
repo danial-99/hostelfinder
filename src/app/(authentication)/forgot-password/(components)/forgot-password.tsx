@@ -1,5 +1,6 @@
 "use client";
 
+import { ForgetPasswordformSchema } from "@/app/lib/definitions";
 import Typography from "@/components/Custom/Typography";
 import { Button } from "@/components/ui/button";
 import {
@@ -10,31 +11,91 @@ import {
   FormMessage
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { toast } from "@/hooks/use-toast";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2 } from "lucide-react";
 import Link from "next/link";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
-import z from "zod";
+import { z } from "zod";
+import { ForgetPassword } from "../../../../../actions/authen/forgetPassword";
+import { useRouter } from "next/navigation";
 
-const formSchema = z.object({
-  email: z.string().email().min(5, {
-    message: "email must be 5 characters",
-  }),
-});
 
 const ForgotPasswordForm = () => {
+  const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
+
   const form = useForm<any>({
-    resolver: zodResolver(formSchema),
+    resolver: zodResolver(ForgetPasswordformSchema),
     defaultValues: {
       email: "",
     },
   });
 
-  const { reset, handleSubmit } = form;
+  const { handleSubmit } = form;
 
-  const onSubmit = (data: any) => {
-    console.log(data, 'form data');
-  }
+  const onSubmit = async (data: z.infer<typeof ForgetPasswordformSchema>) => {
+    setIsLoading(true);
+    try {
+      const formData = new FormData();
+      Object.entries(data).forEach(([key, value]) => {
+        formData.append(key, value.toString());
+      });
+
+      const result: any = await ForgetPassword(formData);
+
+      if (!result.success) {
+        // Handle different error scenarios based on status code
+        switch (result.status) {
+          case 400:
+            toast({
+              title: "Invalid Input",
+              description: "Please check your email and try again.",
+              variant: "destructive",
+            });
+            break;
+          case 404:
+            toast({
+              title: "Email Not Found",
+              description: "No account found with this email.",
+              variant: "destructive",
+            });
+            break;
+          case 500:
+            toast({
+              title: "Server Error",
+              description:
+                "An unexpected error occurred. Please try again later.",
+              variant: "destructive",
+            });
+            break;
+          default:
+            toast({
+              title: "Login Failed",
+              description: result.error || "An error occurred during login.",
+              variant: "destructive",
+            });
+        }
+      } else if (result) {
+        toast({
+          title: "Requested Successfully",
+          description: "OTP has been send to your email address.",
+          variant: "default",
+        }),
+        router.push('/otp-verification')
+      }
+    } catch (error) {
+      toast({
+        title: "Failed",
+        description: "An unexpected error occurred. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   
   return (
     <div className="mt-16">
@@ -57,12 +118,14 @@ const ForgotPasswordForm = () => {
               </FormItem>
             )}
           />
-          <Button
-            disabled={false}
-            className="flex justify-center items-center gap-1 w-full text-white bg-secondary hover:bg-secondary/90 mb-11"
+            <Button
+            disabled={isLoading}
+            className='flex justify-center items-center gap-1 w-full text-white bg-secondary hover:bg-secondary/90'
           >
-            {false && <Loader2 className="animate-spin text-white h-4 w-4" />}
-            <Typography variant="span">Submit</Typography>
+            {isLoading && (
+              <Loader2 className='animate-spin text-white h-4 w-4' />
+            )}
+            <Typography variant='span'>Submit</Typography>
           </Button>
         </form>
       </Form>

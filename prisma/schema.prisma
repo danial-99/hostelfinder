@@ -41,6 +41,7 @@ model User {
   bookings        BookingRequests[]
   feedbacks       Feedback[]
   ratings         Rating[]
+  otp             String?
 }
 
 model Hostel {
