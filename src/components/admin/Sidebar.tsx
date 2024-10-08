@@ -5,6 +5,8 @@ import { Button } from '../ui/button';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Home, Building, Calendar, Users, CreditCard, LogOut } from "lucide-react";
+import { useAuth } from '@/app/hooks/useAuth';
+import { clearSession } from '@/app/lib/auth';
 
 const navItems = [
   { icon: Home, label: "Overview", href: "/dashboard" },
@@ -17,6 +19,7 @@ const navItems = [
 
 export default function Sidebar() {
   const [activePath, setActivePath] = useState("/dashboard");
+  const { logoutHook } = useAuth();
 
   useEffect(() => {
     const updateActivePath = () => {
@@ -66,7 +69,7 @@ export default function Sidebar() {
         <Button
         variant={'default'}
           className="flex items-center justify-center w-full px-4 py-2 rounded"
-          onClick={() => console.log("Logout clicked")}
+          onClick={() => {clearSession(), logoutHook()}}
         >
           <LogOut className="h-5 w-5 mr-2" />
           Log out

@@ -53,7 +53,6 @@ const SignupForm = () => {
       });
 
       const result = await signUp(formData);
-      console.log(result, 'import { cn } from "@/app/lib/utils"')
 
       if (result.error) {
         // Handle different error scenarios based on status code
