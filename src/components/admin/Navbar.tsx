@@ -8,9 +8,11 @@ import { Bell, Menu, Search, X } from "lucide-react";
 import Image from "next/image";
 import { useState } from "react";
 import Sidebar from "./Sidebar";
+import { useAuth } from "@/app/hooks/useAuth";
 
 export default function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const { user } = useAuth();
 
   return (
     <nav className='bg-white shadow-sm'>
@@ -60,9 +62,9 @@ export default function Navbar() {
                 </Avatar>
                 <div className='ml-3'>
                   <div className='text-sm font-medium text-gray-700'>
-                    Moni Roy
+                    {user?.name}
                   </div>
-                  <div className='text-xs text-gray-500'>Admin</div>
+                  <div className='text-xs text-gray-500 lowercase'>{user?.role}</div>
                 </div>
               </div>
             </div>
@@ -100,9 +102,9 @@ export default function Navbar() {
                 </Avatar>
                 <div className='ml-3'>
                   <div className='text-sm font-medium text-gray-700'>
-                    Moni Roy
+                    {user?.name}
                   </div>
-                  <div className='text-xs text-gray-500'>Admin</div>
+                  <div className='text-xs text-gray-500 lowercase'>{user?.role}</div>
                 </div>
               </div>
             </div>

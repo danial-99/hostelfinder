@@ -5,11 +5,23 @@ import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import { Separator } from "@/components/ui/separator";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { Menu } from "lucide-react";
+import { LogOut, Menu } from "lucide-react";
 import { useState } from "react";
+import { useAuth } from "@/app/hooks/useAuth";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { clearSession } from "@/app/lib/auth";
 
 export default function Header() {
   const [isOpen, setIsOpen] = useState(false);
+  const { user, isLoggedIn, logoutHook } = useAuth();
 
   const navItems = [
     { href: "#", label: "Home" },
@@ -36,16 +48,44 @@ export default function Header() {
           ))}
         </nav>
 
-        <div className='hidden md:flex items-center'>
-          <Link href={"/login"}>
-            <Button variant='ghost' className='text-white'>
-              Login
-            </Button>
-          </Link>
-          <Link href={"/register"}>
-          <Button className='ml-2'>Register</Button>
-          </Link>
-        </div>
+        {isLoggedIn ? (
+          <>
+              <DropdownMenu>
+                <DropdownMenuTrigger>
+                <Avatar>
+                <AvatarImage width={10} height={10} src='https://github.com/shadcn.png' />
+                <AvatarFallback>CN</AvatarFallback>
+              </Avatar>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent>
+                  <DropdownMenuLabel>{user?.name}</DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem>{user?.email}</DropdownMenuItem>
+                  <DropdownMenuItem>
+                  <Button
+                    variant={'default'}
+                      className="flex items-center justify-center w-full px-4 py-2 rounded"
+                      onClick={() => {clearSession(), logoutHook()}}
+                    >
+                      <LogOut className="h-5 w-5 mr-2" />
+                      Log out
+                    </Button>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+          </>
+        ) : (
+          <div className='hidden md:flex items-center'>
+            <Link href={"/login"}>
+              <Button variant='ghost' className='text-white'>
+                Login
+              </Button>
+            </Link>
+            <Link href={"/register"}>
+              <Button className='ml-2'>Register</Button>
+            </Link>
+          </div>
+        )}
 
         <Sheet open={isOpen} onOpenChange={setIsOpen}>
           <SheetTrigger asChild className='md:hidden'>
@@ -66,20 +106,24 @@ export default function Header() {
                   {item.label}
                 </Link>
               ))}
+              {!isLoggedIn && 
+              <>
               <Separator className='my-4' />
               <Button
                 variant='ghost'
                 className='justify-start'
                 onClick={() => setIsOpen(false)}
-              >
+                >
                 Login
               </Button>
               <Button
                 className='justify-start'
                 onClick={() => setIsOpen(false)}
-              >
+                >
                 Register
               </Button>
+                </>
+              }
             </nav>
           </SheetContent>
         </Sheet>
