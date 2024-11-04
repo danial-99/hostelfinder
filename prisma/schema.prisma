@@ -1,0 +1,183 @@
+// schema.prisma
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  SUPER_ADMIN
+  ADMIN
+  USER
+}
+
+enum HostelType {
+  BOYS
+  GIRLS
+  COED
+}
+
+enum BookingStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+model User {
+  id              String            @id @default(uuid())
+  name            String
+  username        String?           @unique
+  email           String            @unique
+  password        String
+  phone           String?
+  termsConditions Boolean           @default(true)
+  role            UserRole          @default(USER)
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+  hostels         Hostel[]
+  bookings        BookingRequests[]
+  feedbacks       Feedback[]
+  ratings         Rating[]
+  otp             String?
+}
+
+model Hostel {
+  id              String             @id @default(uuid())
+  ownerId         String?
+  ownerName       User?              @relation(fields: [ownerId], references: [id])
+  name            String
+  location        String
+  type            HostelType
+  description     String
+  image           String
+  termsConditions String
+  createdAt       DateTime           @default(now())
+  updatedAt       DateTime           @updatedAt
+  rooms           HostelRooms[]
+  facilities      HostelFacilities[]
+  bookings        BookingRequests[]
+  feedbacks       Feedback[]
+  ratings         Rating[]
+  Pricing         Pricing[]
+  HostelFeatured  HostelFeatured[]
+}
+
+model HostelRooms {
+  id          String            @id @default(uuid())
+  hostelId    String?
+  hostel      Hostel?           @relation(fields: [hostelId], references: [id])
+  name        String
+  description String
+  bedseats    Int
+  price       Int
+  image       String
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+  bookings    BookingRequests[]
+}
+
+model HostelFacilities {
+  id          String   @id @default(uuid())
+  hostelId    String
+  hostel      Hostel   @relation(fields: [hostelId], references: [id])
+  facilityId  String
+  facility    Facility @relation(fields: [facilityId], references: [id])
+  isAvailable Boolean
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@unique([hostelId, facilityId])
+}
+
+model Facility {
+  id        String             @id @default(uuid())
+  name      String             @unique
+  isDefault Boolean            @default(false)
+  hostels   HostelFacilities[]
+}
+
+model BookingRequests {
+  id        String           @id @default(uuid())
+  user      User?            @relation(fields: [id], references: [id])
+  hostelId  String
+  hostel    Hostel?          @relation(fields: [hostelId], references: [id])
+  roomId    String?
+  room      HostelRooms?     @relation(fields: [roomId], references: [id])
+  status    BookingStatus    @default(PENDING)
+  createdAt DateTime         @default(now())
+  updatedAt DateTime         @updatedAt
+  payment   BookingPayments?
+}
+
+model BookingPayments {
+  id            String           @id @default(uuid())
+  bookingId     String           @unique
+  booking       BookingRequests? @relation(fields: [bookingId], references: [id])
+  amount        Int
+  paymentMethod String
+  paymentStatus String
+  createdAt     DateTime         @default(now())
+  updatedAt     DateTime         @updatedAt
+}
+
+model Feedback {
+  id        String   @id @default(uuid())
+  user      User?    @relation(fields: [id], references: [id])
+  hostelId  String
+  hostel    Hostel?  @relation(fields: [hostelId], references: [id])
+  message   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Rating {
+  id        String   @id @default(uuid())
+  user      User?    @relation(fields: [id], references: [id])
+  hostelId  String
+  hostel    Hostel?  @relation(fields: [hostelId], references: [id])
+  rating    Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Pricing {
+  id           String   @id @default(uuid())
+  hostelId     String   @unique
+  hostel       Hostel   @relation(fields: [hostelId], references: [id])
+  monthlyPrice Float
+  yearlyPrice  Float
+  currency     String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model HostelFeatured {
+  id                String   @id @default(uuid())
+  hostelId          String   @unique
+  hostel            Hostel   @relation(fields: [hostelId], references: [id])
+  isFeatured        Boolean  @default(false)
+  featuredStartDate DateTime
+  featuredEndDate   DateTime
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+}
+
+// function generateUsername(name: string, email: string, phone: string): string {
+//   const firstName = name.split(' ')[0].toLowerCase();
+//   const lastThreeDigits = phone.slice(-3);
+//   return `@${firstName}${lastThreeDigits}`;
+// }
+
+// const username = generateUsername(name, email, phone);
+// const newUser = await prisma.user.create({
+//   data: {
+//     name,
+//     email,
+//     phone,
+//     username,
+//     // ... other user data
+//   },
+// });
