@@ -28,20 +28,21 @@ import { useAuth } from "@/app/hooks/useAuth";
 const LoginForm = () => {
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
-  const { loginHook, } = useAuth();
+  const { loginHook } = useAuth();
 
-  const form = useForm<any>({
+  const form = useForm<z.infer<typeof LoginFormSchema>>({
     resolver: zodResolver(LoginFormSchema),
     defaultValues: {
       email: "",
       password: "",
-      remeber: false,
+      remember: false,
     },
   });
 
-  const { handleSubmit } = form;
+  // const { handleSubmit } = form;
 
   const onSubmit = async (data: z.infer<typeof LoginFormSchema>) => {
+    console.log("reached to login");
     setIsLoading(true);
     try {
       const formData = new FormData();
@@ -50,6 +51,7 @@ const LoginForm = () => {
       });
 
       const result: any = await Login(formData);
+      console.log(result);
 
       if (!result.success) {
         // Handle different error scenarios based on status code
@@ -109,6 +111,8 @@ const LoginForm = () => {
             ? "/super-admin/dashboard"
             : "/"
         ); // Adjust the route as needed
+
+        router.refresh();
       }
     } catch (error) {
       toast({
@@ -122,19 +126,19 @@ const LoginForm = () => {
   };
 
   return (
-    <div className='mt-[152px]'>
+    <div className="mt-[152px]">
       <Form {...form}>
-        <form onSubmit={handleSubmit(onSubmit)}>
+        <form onSubmit={form.handleSubmit(onSubmit)}>
           <FormField
             control={form.control}
             name={"email"}
             render={({ field }) => (
-              <FormItem className='mb-4'>
+              <FormItem className="mb-4">
                 <Input
                   value={field.value}
                   onChange={field.onChange}
-                  type='email'
-                  placeholder='Enter your email'
+                  type="email"
+                  placeholder="Enter your email"
                 />
                 <FormControl>
                   <FormMessage />
@@ -146,12 +150,12 @@ const LoginForm = () => {
             control={form.control}
             name={"password"}
             render={({ field }) => (
-              <FormItem className='mb-4'>
+              <FormItem className="mb-4">
                 <Input
                   value={field.value}
                   onChange={field.onChange}
-                  type='password'
-                  placeholder='Enter your password'
+                  type="password"
+                  placeholder="Enter your password"
                 />
                 <FormControl>
                   <FormMessage />
@@ -159,15 +163,15 @@ const LoginForm = () => {
               </FormItem>
             )}
           />
-          <div className='flex justify-between items-center flex-wrap gap-x-3 gap-y-2 mb-4'>
+          <div className="flex justify-between items-center flex-wrap gap-x-3 gap-y-2 mb-4">
             <FormField
               control={form.control}
               name={"remember"}
               render={({ field }) => (
                 <FormItem>
-                  <div className='flex justify-start items-center gap-x-2'>
+                  <div className="flex justify-start items-center gap-x-2">
                     <Checkbox value={field.value} onSelect={field.onChange} />
-                    <FormLabel className='text-muted-foreground text-xs'>
+                    <FormLabel className="text-muted-foreground text-xs">
                       Remember me
                     </FormLabel>
                   </div>
@@ -179,26 +183,27 @@ const LoginForm = () => {
             />
             <Link
               href={"/forgot-password"}
-              className='text-xs text-primary font-normal whitespace-nowrap'
+              className="text-xs text-primary font-normal whitespace-nowrap"
             >
               Forget Password
             </Link>
           </div>
           <Button
+            // type="submit"
             disabled={isLoading}
-            className='flex justify-center items-center gap-1 w-full text-white bg-secondary hover:bg-secondary/90'
+            className="flex justify-center items-center gap-1 w-full text-white bg-secondary hover:bg-secondary/90"
           >
             {isLoading && (
-              <Loader2 className='animate-spin text-white h-4 w-4' />
+              <Loader2 className="animate-spin text-white h-4 w-4" />
             )}
-            <Typography variant='span'>Login</Typography>
+            <Typography variant="span">Login</Typography>
           </Button>
         </form>
       </Form>
 
-      <Typography className='text-base font-medium text-center mt-6 mx-auto'>
+      <Typography className="text-base font-medium text-center mt-6 mx-auto">
         {`Don't have an account?`}{" "}
-        <Link href={"/register"} className='text-primary'>
+        <Link href={"/register"} className="text-primary">
           Register Now
         </Link>
       </Typography>
