@@ -8,7 +8,7 @@ import {
   FormControl,
   FormField,
   FormItem,
-  FormMessage
+  FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { toast } from "@/hooks/use-toast";
@@ -20,7 +20,6 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { ForgetPassword } from "../../../../../actions/authen/forgetPassword";
 import { useRouter } from "next/navigation";
-
 
 const ForgotPasswordForm = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -83,7 +82,7 @@ const ForgotPasswordForm = () => {
           description: "OTP has been send to your email address.",
           variant: "default",
         }),
-        router.push('/otp-verification')
+          router.push("/otp-verification");
       }
     } catch (error) {
       toast({
@@ -96,7 +95,6 @@ const ForgotPasswordForm = () => {
     }
   };
 
-  
   return (
     <div className="mt-16">
       <Form {...form}>
@@ -118,20 +116,20 @@ const ForgotPasswordForm = () => {
               </FormItem>
             )}
           />
-            <Button
+          <Button
             disabled={isLoading}
-            className='flex justify-center items-center gap-1 w-full text-white bg-secondary hover:bg-secondary/90'
+            className="flex justify-center items-center gap-1 w-full text-white bg-secondary hover:bg-secondary/90"
           >
             {isLoading && (
-              <Loader2 className='animate-spin text-white h-4 w-4' />
+              <Loader2 className="animate-spin text-white h-4 w-4" />
             )}
-            <Typography variant='span'>Submit</Typography>
+            <Typography variant="span">Submit</Typography>
           </Button>
         </form>
       </Form>
       <Typography className="text-base font-medium text-center mt-6 mx-auto">
         Remember Password?{" "}
-        <Link href={"/login"} className="text-primary">
+        <Link href={"/auth/login"} className="text-primary">
           Login
         </Link>
       </Typography>

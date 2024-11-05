@@ -250,7 +250,7 @@ const SignupForm = () => {
       </Form>
       <Typography className="text-base font-medium text-center mt-6 mx-auto">
         Already have an account?{" "}
-        <Link href={"/login"} className="text-primary">
+        <Link href={"/auth/login"} className="text-primary">
           Login Now
         </Link>
       </Typography>

@@ -35,9 +35,9 @@ export function middleware(request: NextRequest) {
 
     // Authentication logic
     if (!isAuthenticated && 
-        !pathname.startsWith('/login') && 
-        !pathname.startsWith('/register')) {
-      response = NextResponse.redirect(new URL("/login", request.url));
+        !pathname.startsWith('/auth') && 
+        !pathname.includes('/auth')) {
+      response = NextResponse.redirect(new URL("/auth/login", request.url));
       redirectCache.set(cacheKey, response);
       return response;
     }
