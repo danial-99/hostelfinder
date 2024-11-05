@@ -20,7 +20,7 @@ export function isSessionValid(): boolean {
   return !!decoded;
 }
 
-const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key';
+const JWT_SECRET = process.env.JWT_SECRET || "your-secret-key";
 const DAY_IN_SECONDS = 86400; // 24 hours * 60 minutes * 60 seconds
 
 export function generateToken(id: string, rememberMe: boolean = false): string {
