@@ -76,12 +76,12 @@ export default function Header() {
           </>
         ) : (
           <div className='hidden md:flex items-center'>
-            <Link href={"/login"}>
+            <Link href={"/auth/login"}>
               <Button variant='ghost' className='text-white'>
                 Login
               </Button>
             </Link>
-            <Link href={"/register"}>
+            <Link href={"/auth/register"}>
               <Button className='ml-2'>Register</Button>
             </Link>
           </div>

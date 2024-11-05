@@ -182,7 +182,7 @@ const LoginForm = () => {
               )}
             />
             <Link
-              href={"/forgot-password"}
+              href={"/auth/forgot-password"}
               className="text-xs text-primary font-normal whitespace-nowrap"
             >
               Forget Password
@@ -203,7 +203,7 @@ const LoginForm = () => {
 
       <Typography className="text-base font-medium text-center mt-6 mx-auto">
         {`Don't have an account?`}{" "}
-        <Link href={"/register"} className="text-primary">
+        <Link href={"/auth/register"} className="text-primary">
           Register Now
         </Link>
       </Typography>
