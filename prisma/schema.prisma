@@ -46,15 +46,15 @@ model User {
 
 model Hostel {
   id              String             @id @default(uuid())
-  ownerId         String?
-  ownerName       User?              @relation(fields: [ownerId], references: [id])
+  ownerId         String
+  ownerName       String?
   name            String
-  location        String
+  location        String?
   type            HostelType
   description     String
   avatar          String
   image           String[]
-  termsConditions String
+  termsConditions String?
   createdAt       DateTime           @default(now())
   updatedAt       DateTime           @updatedAt
   rooms           HostelRooms[]
@@ -64,6 +64,9 @@ model Hostel {
   ratings         Rating[]
   Pricing         Pricing[]
   HostelFeatured  HostelFeatured[]
+
+  // Define the relation manually
+  User User? @relation(fields: [ownerId], references: [id])
 }
 
 model HostelRooms {
