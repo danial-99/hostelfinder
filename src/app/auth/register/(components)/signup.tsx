@@ -94,7 +94,7 @@ const SignupForm = () => {
           description: "Your account has been created successfully.",
           variant: "default",
         });
-        router.push("/login");
+        router.push("/auth/login");
       }
     } catch (error) {
       toast({

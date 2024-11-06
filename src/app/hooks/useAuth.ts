@@ -41,7 +41,7 @@ export const useAuth = () => {
       console.log("logot response", respoonse);
       if (respoonse.success) {
         localStorage.removeItem("auth");
-        window.location.href = "/login";
+        window.location.href = "/auth/login";
         // router.push("/login");
         // router.refresh();
       } else {

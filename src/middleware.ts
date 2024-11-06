@@ -35,8 +35,8 @@ export function middleware(request: NextRequest) {
 
     // Authentication logic
     if (!isAuthenticated && 
-        !pathname.startsWith('/auth') && 
-        !pathname.includes('/auth')) {
+        pathname.startsWith('/dashboard') && 
+        pathname.includes('/dashboard')) {
       response = NextResponse.redirect(new URL("/auth/login", request.url));
       redirectCache.set(cacheKey, response);
       return response;
@@ -44,20 +44,20 @@ export function middleware(request: NextRequest) {
 
     // Prevent authenticated users from accessing auth pages
     if (isAuthenticated && 
-        (pathname.startsWith("/login") || pathname.startsWith("/register"))) {
+        (pathname.startsWith("/auth") || pathname.includes("/auth"))) {
       response = NextResponse.redirect(new URL("/", request.url));
       redirectCache.set(cacheKey, response);
       return response;
     }
 
     // Role-based redirects
-    if (isAuthenticated && isAdmin && pathname === "/") {
+    if (isAuthenticated && isAdmin && pathname === "/" || (pathname.includes("/super-admin") || pathname.startsWith("/super-admin"))) {
       response = NextResponse.redirect(new URL("/dashboard", request.url));
       redirectCache.set(cacheKey, response);
       return response;
     }
 
-    if (isAuthenticated && isUser && pathname.startsWith("/dashboard")) {
+    if (isAuthenticated && isUser && pathname.startsWith("/dashboard") || (pathname.includes("/super-admin") || pathname.startsWith("/super-admin"))) {
       response = NextResponse.redirect(new URL("/", request.url));
       redirectCache.set(cacheKey, response);
       return response;
