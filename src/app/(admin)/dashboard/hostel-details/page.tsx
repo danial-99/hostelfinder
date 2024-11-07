@@ -1,10 +1,10 @@
 import React from 'react'
-import HostelDetailsForm from '@/components/admin/hostel-details/HostelDetailsForm'
+import HostelRegistrationForm from '@/components/admin/hostel-details/Registration'
 
 export default function HostelDetailsPage() {
   return (
     <div>
-      <HostelDetailsForm />
+      <HostelRegistrationForm/>
     </div>
   )
 }
