@@ -19,6 +19,7 @@ CREATE TABLE "User" (
     "role" "UserRole" NOT NULL DEFAULT 'USER',
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
+    "otp" TEXT,
 
     CONSTRAINT "User_pkey" PRIMARY KEY ("id")
 );
@@ -26,13 +27,15 @@ CREATE TABLE "User" (
 -- CreateTable
 CREATE TABLE "Hostel" (
     "id" TEXT NOT NULL,
-    "ownerId" TEXT,
+    "ownerId" TEXT NOT NULL,
+    "ownerName" TEXT,
     "name" TEXT NOT NULL,
-    "location" TEXT NOT NULL,
+    "location" TEXT,
     "type" "HostelType" NOT NULL,
     "description" TEXT NOT NULL,
-    "image" TEXT NOT NULL,
-    "termsConditions" TEXT NOT NULL,
+    "avatar" TEXT NOT NULL,
+    "image" TEXT[],
+    "termsConditions" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
@@ -170,7 +173,7 @@ CREATE UNIQUE INDEX "Pricing_hostelId_key" ON "Pricing"("hostelId");
 CREATE UNIQUE INDEX "HostelFeatured_hostelId_key" ON "HostelFeatured"("hostelId");
 
 -- AddForeignKey
-ALTER TABLE "Hostel" ADD CONSTRAINT "Hostel_ownerId_fkey" FOREIGN KEY ("ownerId") REFERENCES "User"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "Hostel" ADD CONSTRAINT "Hostel_ownerId_fkey" FOREIGN KEY ("ownerId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "HostelRooms" ADD CONSTRAINT "HostelRooms_hostelId_fkey" FOREIGN KEY ("hostelId") REFERENCES "Hostel"("id") ON DELETE SET NULL ON UPDATE CASCADE;
