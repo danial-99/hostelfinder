@@ -42,7 +42,8 @@ export async function Login(formData: FormData) {
     }
 
     // Compare passwords
-    const passwordMatch = await bcrypt.compare(password, existingUser.password);
+    // const passwordMatch = await bcrypt.compare(password, existingUser.password)
+    const passwordMatch = password === existingUser.password;
 
     if (!passwordMatch) {
       return {

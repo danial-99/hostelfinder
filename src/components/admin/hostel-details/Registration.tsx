@@ -12,6 +12,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { useDropzone } from 'react-dropzone'
 import { X, Upload, Image as ImageIcon, ChevronLeft, ChevronRight } from 'lucide-react'
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel"
+import { createHostel } from '../../../../actions/dashboard/createHostel'
 
 interface HostelFormData {
   hostelName: string;
@@ -25,6 +26,7 @@ interface HostelFormData {
   cnic: string;
   description: string;
   phoneNumber: string;
+  userId: string;
 }
 
 interface RoomFormData {
@@ -51,6 +53,8 @@ interface ImageUploadData {
 }
 
 export default function HostelRegistrationForm() {
+  const local = localStorage.getItem('auth');
+  const {user} = local ? JSON.parse(local) : null;
   const [step, setStep] = useState(1);
   const [hostelData, setHostelData] = useState<HostelFormData>({
     hostelName: '',
@@ -63,7 +67,8 @@ export default function HostelRegistrationForm() {
     hostelType: '',
     cnic: '',
     description: '',
-    phoneNumber: ''
+    phoneNumber: '',
+    userId: user?.id,
   });
 
   const [roomData, setRoomData] = useState<RoomFormData>({
@@ -190,26 +195,46 @@ export default function HostelRegistrationForm() {
     }
   };
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
     if (step < 5) {
+      // Move to the next step
       setStep(prev => prev + 1);
     } else {
+      // Prepare the selected facilities for submission
       const selectedFacilities = Object.entries(facilitiesData)
         .filter(([_, value]) => value)
         .reduce((acc, [key, value]) => ({ ...acc, [key]: value }), {});
-     
-      console.log('Form submitted:', {
-        hostelData,
-        roomData,
-        facilitiesData: selectedFacilities,
-        imageUploadData
-      });
-      // Here you would typically send the data to your backend
-      alert('Registration submitted successfully!');
+      // Prepare form data to send to the backend
+      const formData = new FormData();
+      formData.append("hostelData", JSON.stringify(hostelData));
+      formData.append("roomData", JSON.stringify(roomData));
+      formData.append("facilitiesData", JSON.stringify(selectedFacilities));
+      formData.append("imageUploadData", JSON.stringify(imageUploadData));
+
+      try {
+        // Make the API call to the backend
+        const response = await createHostel(formData);
+        console.log(response)
+
+        if (response.success) {
+          // Handle success
+          alert("Hostel registration submitted successfully!");
+          console.log("Response data:", response.data);
+        } else {
+          // Handle error
+          alert(`Error: ${response.message}`);
+          console.error("Error:", response.error);
+        }
+      } catch (error) {
+        // Handle network errors
+        alert("An error occurred. Please try again later.");
+        console.error("Error:", error);
+      }
     }
   };
-
   const handleBack = () => {
     setStep(prev => Math.max(1, prev - 1));
   };

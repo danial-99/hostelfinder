@@ -107,7 +107,7 @@ const LoginForm = () => {
             ? "/"
             : result.data.role === "ADMIN"
             ? "/dashboard"
-            : result.data.role === "SUPER-ADMIN"
+            : result.data.role === "SUPER_ADMIN"
             ? "/super-admin/dashboard"
             : "/"
         ); // Adjust the route as needed

@@ -3,6 +3,8 @@ import { Card, CardContent, CardFooter } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { MapPin, Bed, Utensils, Square, Shield, Wifi, Car } from 'lucide-react'
 import Image from 'next/image'
+import { approveHostel, rejectHostel } from "../../../actions/dashboard/getHostels"
+import { sendApprovalEmail, sendRejectionEmail } from "../../../actions/nodemailer/emailTemplates"
 
 interface BookingRequestCardProps {
   hostelName: string
@@ -25,16 +27,38 @@ export default function BookingRequestCard({
   amenities,
   imageUrl
 }: BookingRequestCardProps) {
+  const ID = "6c28222f-c9c5-4f56-81fd-c66608d98a15";
 
-  const onAccept = (id: number) => {
-    console.log(`Accepted booking request ${id}`)
-    // Implement accept logic here
+
+  const onAccept = async (id: string) => {
+    try {
+      const response = await approveHostel(id);
+      console.log("Hostel approved:", response.data);
+      if (response.success) {
+        await sendApprovalEmail(response.ownerEmail);
+      } else {
+        console.error("Failed to approve hostel:", response.message);
+      }
+    } catch (error) {
+      console.error("Error approving hostel:", error);
+    }
   }
 
-  const onReject = (id: number) => {
-    console.log(`Rejected booking request ${id}`)
-    // Implement reject logic here
-  }
+  const onReject = async (id: string) => {
+    console.log(`Rejecting booking request with ID: ${id}`);
+    try {
+      const response = await rejectHostel(id);
+
+      if (response.success) {
+        console.log(`Successfully rejected booking request ${id}`);
+        await sendRejectionEmail(response.ownerEmail);
+      } else {
+        console.error(`Failed to reject booking request ${id}:`, response.message);
+      }
+    } catch (error) {
+      console.error("Error rejecting booking request:", error);
+    }
+  };
   return (
     <Card className="w-full mb-4">
       <CardContent className="p-6">
@@ -64,19 +88,19 @@ export default function BookingRequestCard({
               </div>
             </div>
             <div className="flex flex-wrap gap-2">
-              {amenities.includes('Security') && (
+              {amenities?.includes('Security') && (
                 <div className="flex items-center bg-gray-100 rounded-full px-3 py-1">
                   <Shield className="w-4 h-4 mr-2 text-gray-600" />
                   <span className="text-sm">Security</span>
                 </div>
               )}
-              {amenities.includes('Wifi') && (
+              {amenities?.includes('Wifi') && (
                 <div className="flex items-center bg-gray-100 rounded-full px-3 py-1">
                   <Wifi className="w-4 h-4 mr-2 text-gray-600" />
                   <span className="text-sm">Wifi</span>
                 </div>
               )}
-              {amenities.includes('Parking') && (
+              {amenities?.includes('Parking') && (
                 <div className="flex items-center bg-gray-100 rounded-full px-3 py-1">
                   <Car className="w-4 h-4 mr-2 text-gray-600" />
                   <span className="text-sm">Parking</span>
@@ -87,10 +111,10 @@ export default function BookingRequestCard({
         </div>
       </CardContent>
       <CardFooter className="flex justify-end space-x-2 p-6">
-        <Button variant="outline" onClick={() => onReject} className="bg-red-500 text-white hover:bg-red-600">
+        <Button variant="outline" onClick={() => onReject(ID)} className="bg-red-500 text-white hover:bg-red-600">
           Reject
         </Button>
-        <Button onClick={() => onAccept} className="bg-primary text-white hover:bg-primary-dark">
+        <Button onClick={() => onAccept(ID)} className="bg-primary text-white hover:bg-primary-dark">
           Accept
         </Button>
       </CardFooter>

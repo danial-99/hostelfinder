@@ -159,6 +159,7 @@ const ManageHostels: React.FC = () => {
     },
   ];
 
+
   return (
     <div>
       <h1 className='text-3xl font-bold mb-6'>Manage Hostels</h1>
