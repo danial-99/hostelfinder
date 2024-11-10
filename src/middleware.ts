@@ -30,6 +30,7 @@ export function middleware(request: NextRequest) {
     const isAuthenticated = Boolean(accessToken?.value);
     const isAdmin = userRole?.value === "ADMIN";
     const isUser = userRole?.value === "USER";
+    const isSuperAdmin = userRole?.value === "SUPER_ADMIN";
 
     let response: NextResponse;
 
@@ -51,7 +52,12 @@ export function middleware(request: NextRequest) {
     }
 
     // Role-based redirects
-    if (isAuthenticated && isAdmin && pathname === "/" || (pathname.includes("/super-admin") || pathname.startsWith("/super-admin"))) {
+    if (isAuthenticated && isSuperAdmin) {
+      response = NextResponse.redirect(new URL("/super-admin/dashboard", request.url));
+      redirectCache.set(cacheKey, response);
+      return response;
+    }
+    if (isAuthenticated && (isAdmin) && pathname === "/" || (pathname.includes("/super-admin") || pathname.startsWith("/super-admin"))) {
       response = NextResponse.redirect(new URL("/dashboard", request.url));
       redirectCache.set(cacheKey, response);
       return response;
