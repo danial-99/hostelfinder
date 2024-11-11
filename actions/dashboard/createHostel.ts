@@ -127,6 +127,7 @@ export async function createHostel(formData: FormData) {
     ) as HostelFormData["imageUploadData"];
 
     const hostelType = (hostelData.hostelType === 'female') ? 'GIRLS' : 'BOYS';
+    console.log(imageUploadData);
 
     // Step 1: Create the Hostel
     const hostel = await prismadb.hostel.create({
@@ -136,8 +137,8 @@ export async function createHostel(formData: FormData) {
         location: `${hostelData.country}, ${hostelData.province}, ${hostelData.city}`,
         type: hostelType,
         description: hostelData.description,
-        avatar: imageUploadData.logo || "",
-        image: imageUploadData.hostelImages,
+        avatar:  "",
+        image: [''],
         termsConditions: "Standard Terms",
         status: "PENDING",
         User: { connect: { id: hostelData.userId } },

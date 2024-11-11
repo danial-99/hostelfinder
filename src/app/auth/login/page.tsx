@@ -7,8 +7,8 @@ const Page = () => {
     <>
       <AuthLayout
         title={"Login Into"}
-        subTitle={"Lorem Ipsum is simply"}
-        description="Lorem ipsum dolor sit amet consectetur adipisicing elit. Repellat, temporibus.Lorem ipsum dolor sit amet consectetur adipisicing elit. Repellat, temporibus."
+        subTitle={"Seamless Access to Book and Manage Your Hostel Experience"}
+        description="Welcome back! Guests can easily find and book hostels, while owners manage bookings and listings in one place. Let’s make every stay amazing!"
       >
         <Typography
           variant="h4"

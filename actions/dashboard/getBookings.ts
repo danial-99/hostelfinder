@@ -1,3 +1,5 @@
+'use server';
+import prismadb from "@/app/lib/prisma";
 export async function getBookingRequests(pendingOnly = false) {
     try {
       const bookings = await prismadb.bookingRequests.findMany({

@@ -5,6 +5,7 @@
 import BookingRequestCard from '@/components/admin/BookingRequestCard';
 import { useEffect, useState } from 'react';
 import { getHostels } from '../../../../../actions/dashboard/getHostels';
+import { getBookingRequests } from '../../../../../actions/dashboard/getBookings';
 
 
 const bookingRequests = [
@@ -32,16 +33,14 @@ const bookingRequests = [
   },
 ]
 
-async function fetchHostels() {
-  const response = await getHostels(true);
-  return response.data;
-}
+
 
 export default function BookingRequestsPage() {
+  const [requests, setRequests] = useState([]);
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const data = await fetchHostels();
+        const data = await getBookingRequests(true);
         console.log(data)
       } catch (error) {
         console.error("Failed to fetch hostels:", error);

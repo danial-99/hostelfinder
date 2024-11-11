@@ -10,8 +10,8 @@ const Page = () => {
     <>
       <AuthLayout
         title={"Change Your password"}
-        subTitle={"Lorem Ipsum is simply"}
-        description="Lorem ipsum dolor sit amet consectetur adipisicing elit. Repellat, temporibus.Lorem ipsum dolor sit amet consectetur adipisicing elit. Repellat, temporibus."
+        subTitle={"Seamless Access to Book and Manage Your Hostel Experience"}
+        description="Ready to update your password? Enter a new one to keep your hostel account secure and get back to finding or managing your perfect stay"
       >
         {false ? (
           <>

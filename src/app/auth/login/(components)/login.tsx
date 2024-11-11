@@ -164,23 +164,24 @@ const LoginForm = () => {
             )}
           />
           <div className="flex justify-between items-center flex-wrap gap-x-3 gap-y-2 mb-4">
-            <FormField
-              control={form.control}
-              name={"remember"}
-              render={({ field }) => (
-                <FormItem>
-                  <div className="flex justify-start items-center gap-x-2">
-                    <Checkbox value={field.value} onSelect={field.onChange} />
-                    <FormLabel className="text-muted-foreground text-xs">
-                      Remember me
-                    </FormLabel>
-                  </div>
-                  <FormControl>
-                    <FormMessage />
-                  </FormControl>
-                </FormItem>
-              )}
-            />
+          <FormField
+  control={form.control}
+  name={"remember"}
+  render={({ field }) => (
+    <FormItem>
+      <div className="flex justify-start items-center gap-x-2">
+        <Checkbox checked={field.value} onCheckedChange={field.onChange} />
+        <FormLabel className="text-muted-foreground text-xs">
+          Remember me
+        </FormLabel>
+      </div>
+      <FormControl>
+        <FormMessage />
+      </FormControl>
+    </FormItem>
+  )}
+/>
+
             <Link
               href={"/auth/forgot-password"}
               className="text-xs text-primary font-normal whitespace-nowrap"

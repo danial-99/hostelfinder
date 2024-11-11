@@ -14,6 +14,7 @@ import { X, Upload, Image as ImageIcon, ChevronLeft, ChevronRight } from 'lucide
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel"
 import { createHostel } from '../../../../actions/dashboard/createHostel'
 
+
 interface HostelFormData {
   hostelName: string;
   ownerName: string;

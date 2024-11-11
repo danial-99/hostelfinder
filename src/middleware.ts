@@ -52,22 +52,17 @@ export function middleware(request: NextRequest) {
     }
 
     // Role-based redirects
-    if (isAuthenticated && isSuperAdmin) {
-      response = NextResponse.redirect(new URL("/super-admin/dashboard", request.url));
-      redirectCache.set(cacheKey, response);
-      return response;
-    }
-    if (isAuthenticated && (isAdmin) && pathname === "/" || (pathname.includes("/super-admin") || pathname.startsWith("/super-admin"))) {
-      response = NextResponse.redirect(new URL("/dashboard", request.url));
-      redirectCache.set(cacheKey, response);
-      return response;
-    }
+   // if (isAuthenticated && isAdmin && pathname === "/" || (pathname.includes("/super-admin") || pathname.startsWith("/super-admin"))) {
+     // response = NextResponse.redirect(new URL("/dashboard", request.url));
+     // redirectCache.set(cacheKey, response);
+     // return response;
+    //}
 
-    if (isAuthenticated && isUser && pathname.startsWith("/dashboard") || (pathname.includes("/super-admin") || pathname.startsWith("/super-admin"))) {
-      response = NextResponse.redirect(new URL("/", request.url));
-      redirectCache.set(cacheKey, response);
-      return response;
-    }
+    //if (isAuthenticated && isUser && pathname.startsWith("/dashboard") || (pathname.includes("/super-admin") || pathname.startsWith("/super-admin"))) {
+     // response = NextResponse.redirect(new URL("/", request.url));
+     // redirectCache.set(cacheKey, response);
+     // return response;
+   // }
 
     // Limit cache size to prevent memory leaks
     if (redirectCache.size > 100) {

@@ -7,8 +7,8 @@ const Page = () => {
     <>
       <AuthLayout
         title={"Forgot Password"}
-        subTitle={"Lorem Ipsum is simply"}
-        description="Lorem ipsum dolor sit amet consectetur adipisicing elit. Repellat, temporibus.Lorem ipsum dolor sit amet consectetur adipisicing elit. Repellat, temporibus."
+        subTitle={"Verify Your Identity"}
+        description="Enter the OTP sent to your email to securely access your account and continue booking or managing your hostel."
       >
         <Typography
           variant="h4"
