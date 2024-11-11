@@ -4,8 +4,10 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 import { MapPin, Home, CookingPot, LandPlot, Shield, Wifi, Car } from 'lucide-react'
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import Image from "next/image"
+import { approveHostel, getHostels, rejectHostel } from "../../../actions/dashboard/getHostels"
+import { sendApprovalEmail, sendRejectionEmail } from "../../../actions/nodemailer/emailTemplates"
 
 // Types
 type Hostel = {
@@ -128,17 +130,46 @@ const NewRequests: React.FC = () => {
       image: '/room1.png'
     }
   ])
+  const [requestsHostels, setRequestsHostels] = useState([]);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const data = await getHostels('pending');
+        console.log(data)
+      } catch (error) {
+        console.error("Failed to fetch hostels:", error);
+      }
+    };
+    fetchData();
+  }, []);
 
-  const handleAccept = (id: string) => {
-    setRequests(requests.filter(request => request.id !== id))
-    // Here you would typically make an API call to accept the hostel
-    console.log(`Accepted hostel with id: ${id}`)
+  const handleAccept = async (id: string) => {
+    try {
+      const response = await approveHostel(id);
+      console.log("Hostel approved:", response.data);
+      if (response.success) {
+        await sendApprovalEmail(response.ownerEmail);
+      } else {
+        console.error("Failed to approve hostel:", response.message);
+      }
+    } catch (error) {
+      console.error("Error approving hostel:", error);
+    }
   }
 
-  const handleReject = (id: string) => {
-    setRequests(requests.filter(request => request.id !== id))
-    // Here you would typically make an API call to reject the hostel
-    console.log(`Rejected hostel with id: ${id}`)
+  const handleReject = async (id: string) => {
+    try {
+      const response = await rejectHostel(id);
+
+      if (response.success) {
+        console.log(`Successfully rejected booking request ${id}`);
+        await sendRejectionEmail(response.ownerEmail);
+      } else {
+        console.error(`Failed to reject booking request ${id}:`, response.message);
+      }
+    } catch (error) {
+      console.error("Error rejecting booking request:", error);
+    }
   }
 
   return (

@@ -1,6 +1,9 @@
+'use client';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Star } from "lucide-react";
 import Image from "next/image";
+import { useEffect } from "react";
+import { getHostels } from "../../../actions/dashboard/getHostels";
 
 const hostels = [
   { id: 1, name: "Capital Boys Hostel", rating: 4.5, image: "/room.jpg" },
@@ -9,6 +12,18 @@ const hostels = [
 ];
 
 export default function TopRatedHostels() {
+  
+  const fetchHotels =  async () => {
+    try{
+      const data = await getHostels();
+      console.log(data)
+    }catch(error){
+      console.error('Error fetching hotels:', error);
+    }
+  }
+  useEffect(()=>{
+    fetchHotels();
+  },[])
   return (
     <section className='py-12'>
       <div className='container'>

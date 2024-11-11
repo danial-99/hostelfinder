@@ -44,7 +44,7 @@ export function middleware(request: NextRequest) {
     }
 
     // Prevent authenticated users from accessing auth pages
-    if (isAuthenticated && 
+    if (isAuthenticated &&
         (pathname.startsWith("/auth") || pathname.includes("/auth"))) {
       response = NextResponse.redirect(new URL("/", request.url));
       redirectCache.set(cacheKey, response);

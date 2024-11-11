@@ -1,42 +1,58 @@
+'use client';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Star, MapPin, Users } from "lucide-react";
 import Image from "next/image";
+import { getHostels } from "../../../actions/dashboard/getHostels";
+import { useEffect, useState } from "react";
 
-const hostels = [
-  {
-    id: 1,
-    name: "Capital Boys Hostel",
-    rating: 4.5,
-    location: "City Center",
-    capacity: 50,
-    image: "/room.jpg",
-  },
-  {
-    id: 2,
-    name: "Capital Boys Hostel",
-    rating: 4.2,
-    location: "Downtown",
-    capacity: 40,
-    image: "/room.jpg",
-  },
-  {
-    id: 3,
-    name: "Capital Boys Hostel",
-    rating: 4.8,
-    location: "University Area",
-    capacity: 60,
-    image: "/room.jpg",
-  },
-];
+// const hostels = [
+//   {
+//     id: 1,
+//     name: "Capital Boys Hostel",
+//     rating: 4.5,
+//     location: "City Center",
+//     capacity: 50,
+//     image: "/room.jpg",
+//   },
+//   {
+//     id: 2,
+//     name: "Capital Boys Hostel",
+//     rating: 4.2,
+//     location: "Downtown",
+//     capacity: 40,
+//     image: "/room.jpg",
+//   },
+//   {
+//     id: 3,
+//     name: "Capital Boys Hostel",
+//     rating: 4.8,
+//     location: "University Area",
+//     capacity: 60,
+//     image: "/room.jpg",
+//   },
+// ];
 
 export default function HostelList() {
+    const [hostels, setHostels] = useState<any[]>([]);
+  const fetchHotels =  async () => {
+    try{
+      const data = await getHostels();
+      setHostels(data.data)
+    }catch(error){
+      console.error('Error fetching hotels:', error);
+    }
+  }
+  useEffect(()=>{
+    fetchHotels();
+  },[])
+  console.log(hostels)
   return (
     <section className='py-12 bg-gray-50'>
       <div className='container'>
         <h2 className='text-3xl font-bold mb-6'>List of Hostels</h2>
         <div className='grid grid-cols-1 md:grid-cols-3 gap-6'>
-          {hostels.map((hostel) => (
-            <Card key={hostel.id}>
+          { hostels ? hostels?.map((hostel) => (
+            <Card key={hostel.id} >
               <CardHeader className='p-0'>
                 <Image
                   src={hostel.image}
@@ -74,7 +90,7 @@ export default function HostelList() {
                 </div>
               </CardContent>
             </Card>
-          ))}
+          )) : <></>}
         </div>
       </div>
     </section>

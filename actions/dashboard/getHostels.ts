@@ -4,11 +4,11 @@
 import prismadb from "@/app/lib/prisma";
 
 // Function to get all or only unapproved hostels based on the parameter
-export async function getHostels(unapprovedOnly = false) {
+export async function getHostels(status = 'approved') {
   try {
     console.log("HELLO")
     const hostels = await prismadb.hostel.findMany({
-      where: unapprovedOnly ? { status: "PENDING" } : {},
+      where: status === 'pending' ? { status: "PENDING" } : {status: "APPROVED"},
       include: {
         rooms: true, // Assuming you have a relation to rooms
         facilities: true, // Assuming you have a relation to facilities

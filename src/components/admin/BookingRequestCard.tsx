@@ -3,8 +3,8 @@ import { Card, CardContent, CardFooter } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { MapPin, Bed, Utensils, Square, Shield, Wifi, Car } from 'lucide-react'
 import Image from 'next/image'
-import { approveHostel, rejectHostel } from "../../../actions/dashboard/getHostels"
-import { sendApprovalEmail, sendRejectionEmail } from "../../../actions/nodemailer/emailTemplates"
+import {  sendBookingApprovalEmail, sendBookingRejectionEmail, sendRejectionEmail } from "../../../actions/nodemailer/emailTemplates"
+import { approveBooking, rejectBooking } from "../../../actions/dashboard/getBookings"
 
 interface BookingRequestCardProps {
   hostelName: string
@@ -32,10 +32,10 @@ export default function BookingRequestCard({
 
   const onAccept = async (id: string) => {
     try {
-      const response = await approveHostel(id);
+      const response = await approveBooking(id);
       console.log("Hostel approved:", response.data);
       if (response.success) {
-        await sendApprovalEmail(response.ownerEmail);
+        await sendBookingApprovalEmail(response.ownerEmail);
       } else {
         console.error("Failed to approve hostel:", response.message);
       }
@@ -47,11 +47,11 @@ export default function BookingRequestCard({
   const onReject = async (id: string) => {
     console.log(`Rejecting booking request with ID: ${id}`);
     try {
-      const response = await rejectHostel(id);
+      const response = await rejectBooking(id);
 
       if (response.success) {
         console.log(`Successfully rejected booking request ${id}`);
-        await sendRejectionEmail(response.ownerEmail);
+        await sendBookingRejectionEmail(response.ownerEmail);
       } else {
         console.error(`Failed to reject booking request ${id}:`, response.message);
       }

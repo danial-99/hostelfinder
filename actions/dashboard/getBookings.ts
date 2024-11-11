@@ -3,7 +3,7 @@ import prismadb from "@/app/lib/prisma";
 export async function getBookingRequests(pendingOnly = false) {
     try {
       const bookings = await prismadb.bookingRequests.findMany({
-        where: pendingOnly ? { status: "PENDING" } : {},
+        where: pendingOnly ? { status: "PENDING" } : {status: "APPROVED"},
         include: {
           user: true,
           hostel: true,
@@ -55,7 +55,7 @@ export async function approveBooking(id: string) {
         success: true,
         message: "Booking request status updated to APPROVED.",
         data: updatedBooking,
-        userEmail: booking.user?.email,
+        ownerEmail: booking.user?.email,
       };
     } catch (error) {
       console.error("[APPROVE_BOOKING_ERROR]", error);
@@ -97,7 +97,7 @@ export async function rejectBooking(bookingId: string) {
         status: 200,
         success: true,
         message: "Booking request rejected successfully",
-        userEmail: booking.user?.email,
+        ownerEmail: booking.user?.email,
       };
     } catch (error) {
       console.error("[REJECT_BOOKING_ERROR]", error);
