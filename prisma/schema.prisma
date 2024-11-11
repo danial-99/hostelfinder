@@ -52,7 +52,8 @@ model Hostel {
   location        String?
   type            HostelType
   description     String
-  avatar          String
+  avatar          Avatar             @relation(fields: [avatarId], references: [id])
+  avatarId        String
   image           String[]
   termsConditions String?
   createdAt       DateTime           @default(now())
@@ -67,6 +68,16 @@ model Hostel {
 
   // Define the relation manually
   User User? @relation(fields: [ownerId], references: [id])
+}
+
+model Avatar {
+  id       String   @id @default(uuid())
+  fileName String // The name of the file
+  mimeType String // The MIME type of the file (e.g., image/jpeg)
+  size     Int // The size of the file in bytes
+  url      String // The URL where the file is stored
+  altText  String? // Optional description for accessibility
+  Hostel   Hostel[]
 }
 
 model HostelRooms {
