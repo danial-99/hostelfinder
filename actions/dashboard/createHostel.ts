@@ -154,7 +154,7 @@ export async function createHostel(formData: FormData) {
             name: "1-Bed Room",
             description: "Single Bed Room",
             bedseats: 1,
-            price: roomData.oneBedRoomPrice,
+            price: Number(roomData.oneBedRoomPrice),
             image: "default.jpg",
           },
         })
